@@ -24,9 +24,13 @@ predictions = knn.predict(X_train[X_test])
 # Calculate the number of equal elements
 print(f'correct {np.sum(y_train[X_test] == predictions)}')
 
+
 # install uv An extremely fast Python package manager.
 # uv venv
 # uv pip install line_profiler
 # kernprof -l -v test_knn.py
 # python -m line_profiler test_knn.py.lprof > profile_report.txt
 
+# brew install open-mpi
+# uv pip install mpi4py
+# sysctl -n hw.ncpu

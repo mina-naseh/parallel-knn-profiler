@@ -3,6 +3,8 @@ import numpy as np
 from concurrent.futures import ThreadPoolExecutor
 from KNNClassifier import KNNClassifier  # Import the unmodified class
 
+from timeit import default_timer as timer
+
 # Helper function for multi-threaded distance calculations
 def predict_single_test_point(knn, x, num_threads):
     # Split training data for multi-threaded distance calculation
@@ -22,7 +24,7 @@ def predict_single_test_point(knn, x, num_threads):
     return np.bincount(k_nearest_labels).argmax()
 
 # Main function for parallel predictions
-def parallel_predict(knn, X_test, num_threads=4):
+def parallel_predict(knn, X_test, num_threads):
     # Set up MPI
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
@@ -45,13 +47,13 @@ def parallel_predict(knn, X_test, num_threads=4):
 
 if __name__ == "__main__":
     # Initialize data
-    rows, cols = 100000, 500
+    rows, cols = 10000, 500
     np.random.seed(699)
     X_train = np.random.rand(rows, cols)
     y_train = np.random.randint(2, size=rows)
-    test_size = 1000
+    test_size = 100
     X_test_indices = np.random.randint(rows, size=test_size)
-    X_test = X_train[X_test_indices]  # Get test samples from X_train for consistency
+    X_test = X_train[X_test_indices]
 
     # Instantiate and fit KNNClassifier
     knn = KNNClassifier(k=2)
@@ -59,26 +61,28 @@ if __name__ == "__main__":
 
     # Run sequential prediction only in the root process
     if MPI.COMM_WORLD.Get_rank() == 0:
+        start = timer()
         sequential_predictions = knn.predict(X_test)
+        end = timer()
+        print(f'Sequential time: {end - start:.4f} seconds')
         correct_sequential = np.sum(y_train[X_test_indices] == sequential_predictions)
         print(f'Sequential correct: {correct_sequential}')
 
     # Run parallel prediction
+    start = timer()
     parallel_predictions = parallel_predict(knn, X_test, num_threads=2)
 
     # Only the root process will print the comparison
     if MPI.COMM_WORLD.Get_rank() == 0:
         # Check if the parallel predictions match the sequential predictions
         assert np.array_equal(sequential_predictions, parallel_predictions), "Mismatch between parallel and sequential predictions!"
-        
+        end = timer()
+        print(f'Parallel time: {end - start:.4f} seconds')
+
         # Calculate the number of correct predictions in parallel
         correct_parallel = np.sum(y_train[X_test_indices] == parallel_predictions)
         print(f'Parallel correct: {correct_parallel}')
 
 
-
-# brew install open-mpi
-# uv pip install mpi4py
-# sysctl -n hw.ncpu
 
 
