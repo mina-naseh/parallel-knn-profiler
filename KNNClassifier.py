@@ -1,26 +1,16 @@
 import numpy as np
 
-# Global profiling flag
-profiling_enabled = True
-
-# Conditional decorator
-def conditional_profile(func):
-    if profiling_enabled and 'profile' in globals():
-        return profile(func)
-    return func
 
 class KNNClassifier:
     def __init__(self, k=3):
         self.k = k
 
     # @profile
-    @conditional_profile
     def fit(self, X, y):
         self.X_train = X
         self.y_train = y
 
-    # @profile
-    @conditional_profile
+    # @profile 
     def euclidean_distance(self, x1, x2):
         diff = (x1 - x2)
         sqr_diff = diff ** 2
@@ -28,13 +18,11 @@ class KNNClassifier:
         return np.sqrt(sqr_diff_sum)
     
     # @profile
-    @conditional_profile
     def predict(self, X):
         y_pred = [self._predict(x) for x in X]
         return np.array(y_pred)
 
     # @profile
-    @conditional_profile
     def _predict(self, x):
         # Calculate distances from the input point to all training points
         distances = [self.euclidean_distance(x, x_train) for x_train in self.X_train]

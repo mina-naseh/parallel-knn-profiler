@@ -27,6 +27,6 @@ print(f'correct {np.sum(y_train[X_test] == predictions)}')
 # install uv An extremely fast Python package manager.
 # uv venv
 # uv pip install line_profiler
-# kernprof -l test_knn.py
-# python -m line_profiler test_knn.py.lprof > profile_report.txt
 # kernprof -l -v test_knn.py
+# python -m line_profiler test_knn.py.lprof > profile_report.txt
+

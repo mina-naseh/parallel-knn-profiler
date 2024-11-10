@@ -1,0 +1,55 @@
+Timer unit: 1e-06 s
+
+Total time: 4e-06 s
+File: /Users/mina/Desktop/MADS/3rd_semester/Programming Machine Learning Algorithms for HPC/parallel-knn-profiler/KNNClassifier.py
+Function: fit at line 8
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+     8                                               @profile
+     9                                               def fit(self, X, y):
+    10         1          3.0      3.0     75.0          self.X_train = X
+    11         1          1.0      1.0     25.0          self.y_train = y
+
+Total time: 1262.86 s
+File: /Users/mina/Desktop/MADS/3rd_semester/Programming Machine Learning Algorithms for HPC/parallel-knn-profiler/KNNClassifier.py
+Function: euclidean_distance at line 13
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    13                                               @profile 
+    14                                               def euclidean_distance(self, x1, x2):
+    15 100000000  163980721.0      1.6     13.0          diff = (x1 - x2)
+    16 100000000  138887180.0      1.4     11.0          sqr_diff = diff ** 2
+    17 100000000  784155472.0      7.8     62.1          sqr_diff_sum = np.sum(sqr_diff)
+    18 100000000  175840312.0      1.8     13.9          return np.sqrt(sqr_diff_sum)
+
+Total time: 1852.01 s
+File: /Users/mina/Desktop/MADS/3rd_semester/Programming Machine Learning Algorithms for HPC/parallel-knn-profiler/KNNClassifier.py
+Function: predict at line 20
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    20                                               @profile
+    21                                               def predict(self, X):
+    22         1 1852007202.0    2e+09    100.0          y_pred = [self._predict(x) for x in X]
+    23         1         96.0     96.0      0.0          return np.array(y_pred)
+
+Total time: 1850.98 s
+File: /Users/mina/Desktop/MADS/3rd_semester/Programming Machine Learning Algorithms for HPC/parallel-knn-profiler/KNNClassifier.py
+Function: _predict at line 25
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    25                                               @profile
+    26                                               def _predict(self, x):
+    27                                                   # Calculate distances from the input point to all training points
+    28      1000 1842446852.0    2e+06     99.5          distances = [self.euclidean_distance(x, x_train) for x_train in self.X_train]
+    29                                                   # Sort by distance and return indices of the first k neighbors
+    30      1000    8506352.0   8506.4      0.5          k_indices = np.argsort(distances)[:self.k]
+    31                                                   # Extract the labels of the k nearest neighbor training samples
+    32      1000      13235.0     13.2      0.0          k_nearest_labels = [self.y_train[i] for i in k_indices]
+    33                                                   # Return the most common class label among the k nearest neighbors
+    34      1000      13059.0     13.1      0.0          most_common = np.bincount(k_nearest_labels).argmax()
+    35      1000        562.0      0.6      0.0          return most_common
+
