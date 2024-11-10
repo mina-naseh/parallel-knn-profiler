@@ -1,0 +1,2 @@
+/var/lib/slurmd/job3659962/slurm_script: line 12: module: command not found
+/var/lib/slurmd/job3659962/slurm_script: line 15: mpiexec: command not found

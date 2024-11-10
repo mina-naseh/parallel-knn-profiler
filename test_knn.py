@@ -34,3 +34,5 @@ print(f'correct {np.sum(y_train[X_test] == predictions)}')
 # brew install open-mpi
 # uv pip install mpi4py
 # sysctl -n hw.ncpu
+
+# module load mpi/OpenMPI
