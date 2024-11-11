@@ -1,0 +1,16 @@
+Sequential correct: 743
+
+Sequential real times: [703.1169469356537, 700.7911541461945]
+Sequential CPU times: [697.195278832, 694.1773122380001]
+Sequential time (avg real): 701.9541 s, std: 1.1629 s
+Sequential time (avg CPU): 695.6863 s, std: 1.5090 s
+
+Parallel real times: [175.34485149383545, 175.22294449806213]
+Parallel CPU times: [175.16921929299997, 175.1139004659999]
+Parallel time (avg real): 175.2839 s, std: 0.0610 s
+Parallel time (avg CPU): 175.1416 s, std: 0.0277 s
+
+Parallel correct: 743
+
+Speed-up (real time): 4.00x
+
