@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -l
 #SBATCH --job-name=knn_benchmark            # Job name
 #SBATCH --output=benchmark_output_hpc.txt   # Output file
 #SBATCH --error=benchmark_error_hpc.txt     # Error file
@@ -9,7 +9,11 @@
 #SBATCH --partition=batch                   # Partition/queue name (adjust based on your HPC system)
 
 # Load the necessary MPI module
+print_error_and_exit() { echo "***ERROR*** $*"; exit 1; }
+module purge || print_error_and_exit "No 'module' command"
+module load lang/Python
 module load mpi/OpenMPI
+source .venv/bin/activate
 
 # Run the benchmarking script with mpiexec
 mpiexec -n 2 python benchmarking.py
