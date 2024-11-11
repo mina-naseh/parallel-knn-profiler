@@ -83,7 +83,7 @@ if __name__ == "__main__":
     report_file = open("benchmark_report.txt", "w")
 
     # Set the number of benchmarking runs
-    num_runs = 30  # Adjust to 30 for HPC
+    num_runs = 5  # Adjust to 30 for HPC
     sequential_real_times = []
     sequential_cpu_times = []
     parallel_real_times = []
