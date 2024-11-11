@@ -1,8 +1,20 @@
 from mpi4py import MPI
+import argparse
 import numpy as np
 from concurrent.futures import ThreadPoolExecutor
 from KNNClassifier import KNNClassifier  # Import the unmodified class
 from time import time, process_time
+
+
+# Define and parse command-line arguments
+parser = argparse.ArgumentParser(description="KNN Benchmarking Script")
+parser.add_argument("--num_runs", type=int, default=5, help="Number of benchmarking runs")
+parser.add_argument("--num_threads", type=int, default=4, help="Number of threads per MPI task")
+args = parser.parse_args()
+
+num_runs = args.num_runs
+num_threads = args.num_threads
+
 
 # Helper function for multi-threaded distance calculations
 def predict_single_test_point(knn, x, num_threads):
@@ -83,7 +95,7 @@ if __name__ == "__main__":
     report_file = open("benchmark_report.txt", "w")
 
     # Set the number of benchmarking runs
-    num_runs = 5  # Adjust to 30 for HPC
+    num_runs = num_runs
     sequential_real_times = []
     sequential_cpu_times = []
     parallel_real_times = []
@@ -119,7 +131,7 @@ if __name__ == "__main__":
         start_cpu = process_time()  # Start CPU time
 
         # Perform prediction using the parallel approach
-        parallel_predictions = parallel_predict(knn, X_test, num_threads=4)
+        parallel_predictions = parallel_predict(knn, X_test, num_threads=num_threads)
 
         end_real = time()  # End real time
         end_cpu = process_time()  # End CPU time
