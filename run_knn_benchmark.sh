@@ -2,25 +2,21 @@
 #SBATCH --job-name=knn_benchmark            # Job name
 #SBATCH --output=benchmark_output_hpc.txt   # Output file
 #SBATCH --error=benchmark_error_hpc.txt     # Error file
-#SBATCH --nodes=1                           # Number of nodes
-#SBATCH --ntasks=2                          # Number of MPI tasks (processes)
-#SBATCH --cpus-per-task=4                   # CPU cores per MPI task (used for threading)
+#SBATCH --nodes=1                           # Number of nodes (some HPCs allow many CPUs per node)
+#SBATCH --ntasks=8                          # Number of MPI tasks (processes)
+#SBATCH --cpus-per-task=16                  # CPU cores per MPI task (for threading)
 #SBATCH --time=05:00:00                     # Maximum runtime (hh:mm:ss)
-#SBATCH --partition=batch                   # Partition/queue name (adjust based on your HPC system)
+#SBATCH --partition=batch                   # Partition/queue name
 
-# Load the necessary MPI module
-print_error_and_exit() { echo "***ERROR*** $*"; exit 1; }
-module purge || print_error_and_exit "No 'module' command"
+# Load modules and activate Python environment
+module purge
 module load lang/Python
 module load mpi/OpenMPI
 source .venv/bin/activate
 
-# Set the number of runs and threads
-RUNS=30
-THREADS=4
+# Set the number of benchmarking runs and threads per MPI task
+RUNS=2
+THREADS=16
 
-# Run the benchmarking script with command-line arguments
-mpiexec -n 2 python benchmarking.py --num_runs $RUNS --num_threads $THREADS
-
-# # Run the benchmarking script with mpiexec
-# mpiexec -n 2 python benchmarking.py
+# Run the benchmarking script with the specified arguments
+mpiexec -n 8 python benchmarking.py --num_runs $RUNS --num_threads $THREADS
