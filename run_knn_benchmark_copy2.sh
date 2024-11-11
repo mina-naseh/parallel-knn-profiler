@@ -1,7 +1,7 @@
 #!/bin/bash -l
 #SBATCH --job-name=knn_benchmark            # Job name
-#SBATCH --output=benchmark_output_hpc.txt   # Output file
-#SBATCH --error=benchmark_error_hpc.txt     # Error file
+#SBATCH --output=benchmark_output_hpc_copy2.txt   # Output file
+#SBATCH --error=benchmark_error_hpc_copy2.txt     # Error file
 #SBATCH --nodes=1                           # Number of nodes
 #SBATCH --ntasks=4                          # Number of MPI tasks (processes)
 #SBATCH --cpus-per-task=8                   # CPU cores per MPI task (for threading)
