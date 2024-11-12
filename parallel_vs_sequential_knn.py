@@ -1,7 +1,7 @@
 from mpi4py import MPI
 import numpy as np
 from concurrent.futures import ThreadPoolExecutor
-from KNNClassifier import KNNClassifier  # Import the unmodified class
+from KNNClassifier import KNNClassifier 
 
 from timeit import default_timer as timer
 
@@ -40,13 +40,11 @@ def parallel_predict(knn, X_test, num_threads):
     all_predictions = comm.gather(local_predictions, root=0)
 
     if rank == 0:
-        # Flatten and return combined predictions
         return np.concatenate(all_predictions)
     else:
         return None
 
 if __name__ == "__main__":
-    # Initialize data
     rows, cols = 10000, 500
     np.random.seed(699)
     X_train = np.random.rand(rows, cols)
@@ -55,7 +53,7 @@ if __name__ == "__main__":
     X_test_indices = np.random.randint(rows, size=test_size)
     X_test = X_train[X_test_indices]
 
-    # Instantiate and fit KNNClassifier
+
     knn = KNNClassifier(k=2)
     knn.fit(X_train, y_train)
 
@@ -68,21 +66,14 @@ if __name__ == "__main__":
         correct_sequential = np.sum(y_train[X_test_indices] == sequential_predictions)
         print(f'Sequential correct: {correct_sequential}')
 
-    # Run parallel prediction
     start = timer()
     parallel_predictions = parallel_predict(knn, X_test, num_threads=2)
 
     # Only the root process will print the comparison
     if MPI.COMM_WORLD.Get_rank() == 0:
-        # Check if the parallel predictions match the sequential predictions
         assert np.array_equal(sequential_predictions, parallel_predictions), "Mismatch between parallel and sequential predictions!"
         end = timer()
         print(f'Parallel time: {end - start:.4f} seconds')
 
-        # Calculate the number of correct predictions in parallel
         correct_parallel = np.sum(y_train[X_test_indices] == parallel_predictions)
         print(f'Parallel correct: {correct_parallel}')
-
-
-
-
